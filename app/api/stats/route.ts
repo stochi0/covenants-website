@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const [companiesRes, productsRes, availableChemistriesRes, capacityRes] = await Promise.all([
       supabaseServer.from('companies').select('*', { count: 'exact', head: true }),
-      supabaseServer.from('products').select('*', { count: 'exact', head: true }),
+      supabaseServer.from('products').select('*', { count: 'exact', head: true }).is('deleted_at', null),
       supabaseServer
         .from('chemistries')
         .select('id, facility_chemistries!inner(facilities!inner(id))', { count: 'exact', head: true })

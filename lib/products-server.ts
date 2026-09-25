@@ -31,6 +31,7 @@ export async function fetchProductCategoryFacets(): Promise<ProductCategoryFacet
   const { data, error } = await supabaseServer
     .from('products')
     .select('category')
+    .is('deleted_at', null)
     .not('category', 'is', null)
 
   if (error) throw error
@@ -62,6 +63,7 @@ export async function searchProducts(params: SearchParams): Promise<PaginatedRes
   let request = supabaseServer
     .from('products')
     .select('id, product_name, cas_number, category', { count: 'exact' })
+    .is('deleted_at', null)
 
   if (params.categories.length > 0) {
     request = request.in('category', params.categories)
@@ -114,6 +116,7 @@ export async function getProductById(id: string): Promise<Product | null> {
     .from('products')
     .select('id, product_name, cas_number, category')
     .eq('id', id)
+    .is('deleted_at', null)
     .maybeSingle()
 
   if (error) throw error
@@ -129,6 +132,7 @@ export async function getProductsByIds(ids: string[]): Promise<Product[]> {
     .from('products')
     .select('id, product_name, cas_number, category')
     .in('id', ids)
+    .is('deleted_at', null)
 
   if (error) throw error
 
